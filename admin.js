@@ -1,9 +1,8 @@
-// ══════════════════════════════════════════════════════════════
-//  Bingo da Família — Admin Panel JavaScript
-// ══════════════════════════════════════════════════════════════
-
 (() => {
   'use strict';
+
+  let currentTab = 'pendente';
+  let allOrders = [];
 
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
@@ -39,7 +38,7 @@
     }, 3000);
   }
 
-  // ─── Auth check on load ────────────────────────────────────
+  // ─── Verificação de Login ────────────────────────────────────
   async function checkAuth() {
     try {
       const res = await fetch('/api/admin/check');
@@ -47,9 +46,7 @@
       if (data.authenticated) {
         showDashboard();
       }
-    } catch {
-      // Not logged in
-    }
+    } catch {}
   }
 
   function showDashboard() {
@@ -59,7 +56,6 @@
     loadOrders();
   }
 
-  // ─── Login ──────────────────────────────────────────────────
   $('#loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     $('#loginError').textContent = '';
@@ -82,23 +78,22 @@
       if (res.ok) {
         showDashboard();
       } else {
-        $('#loginError').textContent = data.error || 'Erro ao fazer login.';
+        $('#loginError').textContent = data.error || 'Usuário ou senha incorretos.';
       }
     } catch {
-      $('#loginError').textContent = 'Erro de conexão.';
+      $('#loginError').textContent = 'Erro ao conectar.';
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+      btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Painel';
     }
   });
 
-  // ─── Logout ─────────────────────────────────────────────────
   $('#btnLogout').addEventListener('click', async () => {
     await fetch('/api/admin/logout', { method: 'POST' });
     location.reload();
   });
 
-  // ─── Load stats ─────────────────────────────────────────────
+  // ─── Carregar Estatísticas ──────────────────────────────────
   async function loadStats() {
     try {
       const res = await fetch('/api/admin/stats');
@@ -106,64 +101,83 @@
 
       $('#statRevenue').textContent = formatCurrency(data.totalRevenue);
       $('#statCards').textContent = data.totalCards;
-      $('#statOrders').textContent = data.totalOrders;
       $('#statPending').textContent = data.totalPending;
-    } catch {
-      showToast('Erro ao carregar estatísticas.', 'error');
-    }
+
+      $('#badgePendingCount').textContent = data.totalPending;
+      $('#badgePaidCount').textContent = data.totalPaid;
+    } catch {}
   }
 
-  // ─── Load orders ────────────────────────────────────────────
-  let allOrders = [];
-
+  // ─── Carregar Pedidos ───────────────────────────────────────
   async function loadOrders() {
     try {
       const res = await fetch('/api/admin/orders');
       allOrders = await res.json();
       renderOrders();
     } catch {
-      showToast('Erro ao carregar pedidos.', 'error');
+      showToast('Erro ao carregar lista de pedidos.', 'error');
     }
   }
 
-  function renderOrders() {
-    const filter = $('#filterStatus').value;
-    const filtered = filter === 'all' ? allOrders : allOrders.filter((o) => o.status === filter);
+  // ─── Trocar entre Abas (Pendentes / Pagos) ───────────────────
+  window.switchTab = (tab) => {
+    currentTab = tab;
+    if (tab === 'pendente') {
+      $('#tabPendingBtn').className = 'tab-btn active-pending';
+      $('#tabPaidBtn').className = 'tab-btn';
+      $('#tableTitle').innerHTML = '<i class="fas fa-hourglass-half" style="color:#f59e0b;"></i> Pedidos Aguardando Pagamento';
+    } else {
+      $('#tabPendingBtn').className = 'tab-btn';
+      $('#tabPaidBtn').className = 'tab-btn active-paid';
+      $('#tableTitle').innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;"></i> Pedidos Pagos e Confirmados 🎉';
+    }
+    renderOrders();
+  };
 
+  function renderOrders() {
+    const filtered = allOrders.filter((o) => o.status === currentTab);
     const tbody = $('#ordersBody');
 
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Nenhum pedido encontrado</td></tr>';
+      const msg = currentTab === 'pendente' 
+        ? 'Nenhum pedido pendente no momento! 🎉' 
+        : 'Nenhum pedido pago ainda.';
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="8">${msg}</td></tr>`;
       return;
     }
 
     tbody.innerHTML = filtered
       .map((order) => {
-        const statusClass = order.status === 'pago' ? 'status-paid' : 'status-pending';
-        const statusLabel = order.status === 'pago' ? 'Pago' : 'Pendente';
-        const toggleStatus = order.status === 'pago' ? 'pendente' : 'pago';
-        const toggleIcon = order.status === 'pago' ? 'fa-rotate-left' : 'fa-check';
-        const toggleLabel = order.status === 'pago' ? 'Marcar Pendente' : 'Marcar Pago';
+        const isPaid = order.status === 'pago';
+        const statusBadge = isPaid
+          ? '<span class="status-badge status-paid"><i class="fas fa-check"></i> Pago</span>'
+          : '<span class="status-badge status-pending"><i class="fas fa-clock"></i> Pendente</span>';
+
+        const actionBtn = isPaid
+          ? `<button class="btn-action btn-toggle" onclick="toggleStatus(${order.id}, 'pendente')" title="Voltar para Pendente" style="background:#fef3c7; color:#92400e;">
+               <i class="fas fa-rotate-left"></i>
+             </button>`
+          : `<button class="btn-action btn-toggle" onclick="toggleStatus(${order.id}, 'pago')" title="Confirmar Pagamento PIX" style="background:#10b981; color:#ffffff; width:auto; padding:0 14px; border-radius:20px; font-weight:700;">
+               <i class="fas fa-check"></i> Confirmar Pago
+             </button>`;
 
         return `
           <tr>
-            <td><strong>${order.id}</strong></td>
-            <td>${escapeHtml(order.customerName)}</td>
+            <td><strong>#${order.id}</strong></td>
+            <td><strong>${escapeHtml(order.customerName)}</strong></td>
             <td>
-              <a href="https://wa.me/55${order.whatsapp}" target="_blank" rel="noopener" class="whatsapp-link">
+              <a href="https://wa.me/55${order.whatsapp}" target="_blank" rel="noopener" class="whatsapp-link" title="Abrir conversa no WhatsApp">
                 <i class="fab fa-whatsapp"></i> ${formatPhone(order.whatsapp)}
               </a>
             </td>
-            <td class="center">${order.quantity}</td>
-            <td>${formatCurrency(order.totalValue)}</td>
-            <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+            <td class="center"><span style="font-size:1.1rem; font-weight:800; color:#165b33;">${order.quantity}</span></td>
+            <td><strong>${formatCurrency(order.totalValue)}</strong></td>
+            <td>${statusBadge}</td>
             <td class="date-cell">${formatDate(order.createdAt)}</td>
-            <td>
-              <div class="action-btns">
-                <button class="btn-action btn-toggle" onclick="toggleStatus(${order.id}, '${toggleStatus}')" title="${toggleLabel}">
-                  <i class="fas ${toggleIcon}"></i>
-                </button>
-                <button class="btn-action btn-delete" onclick="deleteOrder(${order.id})" title="Excluir">
+            <td class="center">
+              <div class="action-btns" style="justify-content:center;">
+                ${actionBtn}
+                <button class="btn-action btn-delete" onclick="deleteOrder(${order.id})" title="Excluir Pedido">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -180,7 +194,6 @@
     return div.innerHTML;
   }
 
-  // ─── Toggle order status ───────────────────────────────────
   window.toggleStatus = async (id, newStatus) => {
     try {
       const res = await fetch(`/api/admin/orders/${id}/status`, {
@@ -189,102 +202,91 @@
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        showToast(`Pedido #${id} marcado como ${newStatus}.`);
+        showToast(newStatus === 'pago' ? '🎉 Pedido confirmado com sucesso!' : 'Pedido voltou para pendente.');
         loadStats();
         loadOrders();
-      } else {
-        showToast('Erro ao atualizar pedido.', 'error');
       }
     } catch {
       showToast('Erro de conexão.', 'error');
     }
   };
 
-  // ─── Delete order ───────────────────────────────────────────
   window.deleteOrder = async (id) => {
-    if (!confirm(`Tem certeza que deseja excluir o pedido #${id}?`)) return;
+    if (!confirm(`Tem certeza que deseja apagar o pedido #${id}?`)) return;
     try {
       const res = await fetch(`/api/admin/orders/${id}`, { method: 'DELETE' });
       if (res.ok) {
         showToast(`Pedido #${id} excluído.`);
         loadStats();
         loadOrders();
-      } else {
-        showToast('Erro ao excluir pedido.', 'error');
       }
     } catch {
-      showToast('Erro de conexão.', 'error');
+      showToast('Erro ao excluir pedido.', 'error');
     }
   };
 
-  // ─── Filter ─────────────────────────────────────────────────
-  $('#filterStatus').addEventListener('change', renderOrders);
+  // ─── Exportar Backup em Excel / CSV ─────────────────────────
+  function exportCSV() {
+    if (!allOrders.length) {
+      showToast('Nenhum pedido para exportar.', 'error');
+      return;
+    }
+    let csv = '\uFEFFID,Nome,WhatsApp,Cartelas,Valor Total,Status,Data\n';
+    allOrders.forEach((o) => {
+      csv += `"${o.id}","${o.customerName}","${o.whatsapp}","${o.quantity}","${o.totalValue}","${o.status}","${formatDate(o.createdAt)}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bingo-da-familia-pedidos-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    showToast('Planilha de pedidos baixada com sucesso! 📊');
+  }
+
+  $('#btnFastBackup').addEventListener('click', exportCSV);
+  $('#btnExport').addEventListener('click', exportCSV);
+
   $('#btnRefresh').addEventListener('click', () => {
     loadStats();
     loadOrders();
-    showToast('Dados atualizados!', 'info');
+    showToast('Lista atualizada!', 'info');
   });
 
-  // ─── Settings Modal ────────────────────────────────────────
-  $('#btnSettings').addEventListener('click', async () => {
+  // ─── Modal Configurações ────────────────────────────────────
+  $('#btnSettings').addEventListener('click', () => {
     $('#settingsModal').style.display = 'flex';
-    // Load current settings
-    try {
-      const res = await fetch('/api/admin/settings');
-      const data = await res.json();
-      $('#settPixKey').value = data.pixKey || '';
-      $('#settPixKeyType').value = data.pixKeyType || 'CPF';
-      $('#settPixName').value = data.pixName || '';
-    } catch {
-      showToast('Erro ao carregar configurações.', 'error');
-    }
   });
-
   $('#closeSettings').addEventListener('click', () => {
     $('#settingsModal').style.display = 'none';
   });
 
-  // Close modal on backdrop click
-  $('#settingsModal').addEventListener('click', (e) => {
-    if (e.target === $('#settingsModal')) {
-      $('#settingsModal').style.display = 'none';
-    }
-  });
-
-  // Save PIX settings
   $('#btnSaveSettings').addEventListener('click', async () => {
-    const btn = $('#btnSaveSettings');
-    btn.disabled = true;
+    const pixKey = $('#settPixKey').value.trim();
+    const pixName = $('#settPixName').value.trim();
 
     try {
       const res = await fetch('/api/admin/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pixKey: $('#settPixKey').value.trim(),
-          pixKeyType: $('#settPixKeyType').value,
-          pixName: $('#settPixName').value.trim(),
-        }),
+        body: JSON.stringify({ pixKey, pixName }),
       });
       if (res.ok) {
-        showToast('Configurações PIX salvas!');
-      } else {
-        showToast('Erro ao salvar configurações.', 'error');
+        showToast('Chave PIX atualizada com sucesso!');
+        $('#settingsModal').style.display = 'none';
       }
     } catch {
-      showToast('Erro de conexão.', 'error');
-    } finally {
-      btn.disabled = false;
+      showToast('Erro ao salvar.', 'error');
     }
   });
 
-  // Change password
   $('#btnChangePass').addEventListener('click', async () => {
-    const current = $('#settCurrentPass').value;
-    const newPass = $('#settNewPass').value;
+    const currentPassword = $('#settCurrentPass').value;
+    const newPassword = $('#settNewPass').value;
 
-    if (!current || !newPass) {
-      showToast('Preencha ambos os campos de senha.', 'error');
+    if (!currentPassword || !newPassword) {
+      showToast('Preencha as senhas.', 'error');
       return;
     }
 
@@ -292,14 +294,12 @@
       const res = await fetch('/api/admin/password', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword: current, newPassword: newPass }),
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
       const data = await res.json();
-
       if (res.ok) {
         showToast('Senha alterada com sucesso!');
-        $('#settCurrentPass').value = '';
-        $('#settNewPass').value = '';
+        $('#settingsModal').style.display = 'none';
       } else {
         showToast(data.error || 'Erro ao alterar senha.', 'error');
       }
@@ -308,6 +308,5 @@
     }
   });
 
-  // ─── Init ───────────────────────────────────────────────────
   checkAuth();
 })();

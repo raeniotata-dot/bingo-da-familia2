@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — Bingo da Família</title>
+  <title>Admin — Bingo da Família 🎄</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,6 +12,66 @@
   <link rel="stylesheet" href="/admin.css" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    /* Abas Modernas e Chamativas para Pagos e Pendentes */
+    .tabs-container {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 8px;
+    }
+    .tab-btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 2px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      color: #4b5563;
+    }
+    .tab-btn:hover {
+      background: #f3f4f6;
+    }
+    .tab-btn.active-pending {
+      background: #fff8e1;
+      color: #b78103;
+      border-color: #f59e0b;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+    }
+    .tab-btn.active-paid {
+      background: #ecfdf5;
+      color: #065f46;
+      border-color: #10b981;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+    .tab-badge {
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+    .badge-paid { background: #d1fae5; color: #065f46; }
+    
+    .backup-alert {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+  </style>
 </head>
 <body class="admin-body">
 
@@ -19,9 +79,9 @@
   <div class="admin-login" id="loginSection">
     <div class="login-card">
       <div class="login-logo">
-        <i class="fas fa-star"></i>
+        <i class="fas fa-holly-berry"></i>
       </div>
-      <h1>Bingo da Família</h1>
+      <h1>Bingo da Família 🎄</h1>
       <h2>Painel Administrativo</h2>
       <form id="loginForm">
         <div class="form-group">
@@ -37,7 +97,7 @@
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
-          <i class="fas fa-sign-in-alt"></i> Entrar
+          <i class="fas fa-sign-in-alt"></i> Entrar no Painel
         </button>
         <p class="login-error" id="loginError"></p>
       </form>
@@ -48,15 +108,17 @@
   <!-- ═══ DASHBOARD ═══ -->
   <div class="admin-dashboard" id="dashboardSection" style="display:none">
 
-    <!-- Top bar -->
     <header class="admin-header">
       <div class="admin-header-inner">
         <div class="admin-brand">
-          <i class="fas fa-star"></i>
+          <i class="fas fa-star" style="color:#d4af37;"></i>
           <span>Bingo da Família</span>
-          <span class="admin-tag">Admin</span>
+          <span class="admin-tag">Painel Admin</span>
         </div>
         <div class="admin-actions">
+          <button class="btn btn-sm btn-outline" id="btnExport" title="Baixar Lista / Backup">
+            <i class="fas fa-download"></i> <span class="hide-mobile">Baixar Backup</span>
+          </button>
           <button class="btn btn-sm btn-outline" id="btnSettings" title="Configurações">
             <i class="fas fa-cog"></i> <span class="hide-mobile">Configurações</span>
           </button>
@@ -68,50 +130,64 @@
     </header>
 
     <main class="admin-main">
-      <!-- Stats -->
+      <!-- Stats em Destaque -->
       <div class="stats-grid">
         <div class="stat-card stat-green">
-          <div class="stat-icon"><i class="fas fa-brazilian-real-sign"></i></div>
+          <div class="stat-icon"><i class="fas fa-wallet"></i></div>
           <div class="stat-info">
             <span class="stat-value" id="statRevenue">R$ 0,00</span>
             <span class="stat-label">Total Arrecadado (Pagos)</span>
           </div>
         </div>
         <div class="stat-card stat-gold">
-          <div class="stat-icon"><i class="fas fa-ticket"></i></div>
+          <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
           <div class="stat-info">
             <span class="stat-value" id="statCards">0</span>
-            <span class="stat-label">Cartelas Vendidas (Pagas)</span>
-          </div>
-        </div>
-        <div class="stat-card stat-blue">
-          <div class="stat-icon"><i class="fas fa-receipt"></i></div>
-          <div class="stat-info">
-            <span class="stat-value" id="statOrders">0</span>
-            <span class="stat-label">Total de Pedidos</span>
+            <span class="stat-label">Cartelas Confirmadas</span>
           </div>
         </div>
         <div class="stat-card stat-orange">
           <div class="stat-icon"><i class="fas fa-clock"></i></div>
           <div class="stat-info">
             <span class="stat-value" id="statPending">0</span>
-            <span class="stat-label">Pedidos Pendentes</span>
+            <span class="stat-label">Aguardando Pagamento</span>
           </div>
         </div>
+      </div>
+
+      <!-- Alerta com Botão de Backup Fácil -->
+      <div class="backup-alert">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <i class="fas fa-shield-alt" style="color:#2563eb; font-size:1.3rem;"></i>
+          <div>
+            <strong style="color:#1e40af;">Segurança dos Pedidos:</strong>
+            <span style="color:#4b5563; font-size:0.9rem;"> Clique em "Baixar Planilha / Backup" para salvar todos os pedidos com 1 clique!</span>
+          </div>
+        </div>
+        <button class="btn btn-sm" id="btnFastBackup" style="background:#2563eb; color:#fff; border-radius:8px;">
+          <i class="fas fa-file-excel"></i> Baixar em Excel / CSV
+        </button>
+      </div>
+
+      <!-- ABAS SEPARADAS: PENDENTES E PAGOS -->
+      <div class="tabs-container">
+        <button class="tab-btn active-pending" id="tabPendingBtn" onclick="switchTab('pendente')">
+          <i class="fas fa-hourglass-half"></i> Pedidos Pendentes 
+          <span class="tab-badge badge-pending" id="badgePendingCount">0</span>
+        </button>
+        <button class="tab-btn" id="tabPaidBtn" onclick="switchTab('pago')">
+          <i class="fas fa-check-circle"></i> Pedidos Pagos (Confirmados) 
+          <span class="tab-badge badge-paid" id="badgePaidCount">0</span>
+        </button>
       </div>
 
       <!-- Orders table -->
       <div class="orders-panel">
         <div class="panel-header">
-          <h2><i class="fas fa-list"></i> Pedidos</h2>
+          <h2 id="tableTitle"><i class="fas fa-hourglass-half" style="color:#f59e0b;"></i> Aguardando Confirmação do PIX</h2>
           <div class="panel-controls">
-            <select id="filterStatus" class="select-filter">
-              <option value="all">Todos</option>
-              <option value="pendente">Pendentes</option>
-              <option value="pago">Pagos</option>
-            </select>
             <button class="btn btn-sm btn-outline" id="btnRefresh">
-              <i class="fas fa-sync-alt"></i>
+              <i class="fas fa-sync-alt"></i> Atualizar Lista
             </button>
           </div>
         </div>
@@ -123,16 +199,16 @@
                 <th>#</th>
                 <th>Cliente</th>
                 <th>WhatsApp</th>
-                <th>Cartelas</th>
-                <th>Valor</th>
+                <th class="center">Cartelas</th>
+                <th>Valor Total</th>
                 <th>Status</th>
                 <th>Data</th>
-                <th>Ações</th>
+                <th class="center">Ação</th>
               </tr>
             </thead>
             <tbody id="ordersBody">
               <tr class="empty-row">
-                <td colspan="8">Nenhum pedido encontrado</td>
+                <td colspan="8">Carregando pedidos...</td>
               </tr>
             </tbody>
           </table>
@@ -141,7 +217,7 @@
     </main>
   </div>
 
-  <!-- ═══ SETTINGS MODAL ═══ -->
+  <!-- ═══ MODAL CONFIGURAÇÕES ═══ -->
   <div class="modal-overlay" id="settingsModal" style="display:none">
     <div class="modal-card">
       <div class="modal-header">
@@ -150,34 +226,24 @@
       </div>
       <div class="modal-body">
         <div class="settings-section">
-          <h4>Chave PIX</h4>
+          <h4>Chave PIX do Bingo</h4>
           <div class="form-group">
-            <label for="settPixKeyType">Tipo da Chave</label>
-            <select id="settPixKeyType" class="form-select">
-              <option value="CPF">CPF</option>
-              <option value="CNPJ">CNPJ</option>
-              <option value="E-mail">E-mail</option>
-              <option value="Celular">Celular</option>
-              <option value="Aleatória">Chave Aleatória</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="settPixKey">Chave PIX</label>
-            <input type="text" id="settPixKey" placeholder="Digite sua chave PIX" class="form-input" />
+            <label for="settPixKey">Chave PIX (Celular)</label>
+            <input type="text" id="settPixKey" value="66992730310" class="form-input" />
           </div>
           <div class="form-group">
             <label for="settPixName">Nome do Beneficiário</label>
-            <input type="text" id="settPixName" placeholder="Nome exibido no pagamento" class="form-input" />
+            <input type="text" id="settPixName" value="Bingo da Família" class="form-input" />
           </div>
           <button class="btn btn-primary btn-block" id="btnSaveSettings">
-            <i class="fas fa-save"></i> Salvar Configurações PIX
+            <i class="fas fa-save"></i> Salvar Chave PIX
           </button>
         </div>
 
         <hr class="settings-divider" />
 
         <div class="settings-section">
-          <h4>Alterar Senha</h4>
+          <h4>Alterar Senha do Admin</h4>
           <div class="form-group">
             <label for="settCurrentPass">Senha Atual</label>
             <input type="password" id="settCurrentPass" placeholder="Senha atual" class="form-input" />
