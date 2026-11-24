@@ -38,7 +38,6 @@
     }, 3000);
   }
 
-  // ─── Verificação de Login ────────────────────────────────────
   async function checkAuth() {
     try {
       const res = await fetch('/api/admin/check');
@@ -93,7 +92,6 @@
     location.reload();
   });
 
-  // ─── Carregar Estatísticas ──────────────────────────────────
   async function loadStats() {
     try {
       const res = await fetch('/api/admin/stats');
@@ -108,7 +106,6 @@
     } catch {}
   }
 
-  // ─── Carregar Pedidos ───────────────────────────────────────
   async function loadOrders() {
     try {
       const res = await fetch('/api/admin/orders');
@@ -119,7 +116,6 @@
     }
   }
 
-  // ─── Trocar entre Abas (Pendentes / Pagos) ───────────────────
   window.switchTab = (tab) => {
     currentTab = tab;
     if (tab === 'pendente') {
@@ -153,12 +149,13 @@
           ? '<span class="status-badge status-paid"><i class="fas fa-check"></i> Pago</span>'
           : '<span class="status-badge status-pending"><i class="fas fa-clock"></i> Pendente</span>';
 
+        // Botão inteligente com alerta de conferência de valor anti-golpe
         const actionBtn = isPaid
           ? `<button class="btn-action btn-toggle" onclick="toggleStatus(${order.id}, 'pendente')" title="Voltar para Pendente" style="background:#fef3c7; color:#92400e;">
                <i class="fas fa-rotate-left"></i>
              </button>`
-          : `<button class="btn-action btn-toggle" onclick="toggleStatus(${order.id}, 'pago')" title="Confirmar Pagamento PIX" style="background:#10b981; color:#ffffff; width:auto; padding:0 14px; border-radius:20px; font-weight:700;">
-               <i class="fas fa-check"></i> Confirmar Pago
+          : `<button class="btn-action btn-toggle" onclick="promptAntiGolpe(${order.id}, ${order.quantity}, ${order.totalValue}, '${escapeHtml(order.customerName)}', '${order.whatsapp}')" title="Confirmar com Validação de Valor" style="background:#10b981; color:#ffffff; width:auto; padding:0 14px; border-radius:20px; font-weight:700;">
+               <i class="fas fa-shield-alt"></i> Conferir e Liberar
              </button>`;
 
         return `
@@ -171,7 +168,7 @@
               </a>
             </td>
             <td class="center"><span style="font-size:1.1rem; font-weight:800; color:#165b33;">${order.quantity}</span></td>
-            <td><strong>${formatCurrency(order.totalValue)}</strong></td>
+            <td><strong style="color:#b91c1c; font-size:1.05rem;">${formatCurrency(order.totalValue)}</strong></td>
             <td>${statusBadge}</td>
             <td class="date-cell">${formatDate(order.createdAt)}</td>
             <td class="center">
@@ -194,6 +191,57 @@
     return div.innerHTML;
   }
 
+  // ─── SISTEMA ANTI-GOLPE E CONFERÊNCIA DE VALOR ─────────────────────────
+  window.promptAntiGolpe = (id, quantity, expectedValue, customerName, whatsapp) => {
+    const inputVal = prompt(
+      `🛡️ [CONFERÊNCIA ANTI-GOLPE]\n\n` +
+      `Cliente: ${customerName}\n` +
+      `Cartelas pedidas: ${quantity} cartela(s)\n` +
+      `Valor que DEVERIA cair no PIX: R$ ${expectedValue.toFixed(2)}\n\n` +
+      `Quanto caiu EXATAMENTE no seu extrato bancário? (Digite apenas o valor, ex: ${expectedValue.toFixed(2)}):`,
+      expectedValue.toFixed(2)
+    );
+
+    if (inputVal === null) return; // cancelou
+
+    const received = parseFloat(inputVal.replace(',', '.'));
+
+    if (isNaN(received) || received <= 0) {
+      alert('❌ Valor inválido digitado. A liberação foi cancelada.');
+      return;
+    }
+
+    const diff = received - expectedValue;
+
+    // GOLPE: Pagou a MENOS (Ex: pediu 50 cartelas R$100 e mandou R$1,00)
+    if (diff < -0.01) {
+      const falta = Math.abs(diff);
+      alert(
+        `🚨🚨 [ALERTA DE PERIGO / TENTATIVA DE GOLPE!] 🚨🚨\n\n` +
+        `O cliente pediu ${quantity} cartelas (R$ ${expectedValue.toFixed(2)}),\n` +
+        `mas você digitou que recebeu apenas R$ ${received.toFixed(2)}!\n\n` +
+        `FALTA RECEBER: R$ ${falta.toFixed(2)}\n\n` +
+        `⚠️ AS CARTELAS NÃO FORAM LIBERADAS!\n` +
+        `Clique no botão do WhatsApp dele para cobrar a diferença antes de aprovar!`
+      );
+      return;
+    }
+
+    // ALERTA: Pagou a MAIS (Ex: mandou 50 centavos a mais por engano)
+    if (diff > 0.05) {
+      const resp = confirm(
+        `⚠️ [ATENÇÃO - VALOR A MAIS!]\n\n` +
+        `O valor esperado era R$ ${expectedValue.toFixed(2)},\n` +
+        `mas caiu R$ ${received.toFixed(2)} (R$ ${diff.toFixed(2)} A MAIS!).\n\n` +
+        `Deseja liberar o pedido mesmo assim?`
+      );
+      if (!resp) return;
+    }
+
+    // Valor exato e correto!
+    toggleStatus(id, 'pago');
+  };
+
   window.toggleStatus = async (id, newStatus) => {
     try {
       const res = await fetch(`/api/admin/orders/${id}/status`, {
@@ -202,7 +250,7 @@
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        showToast(newStatus === 'pago' ? '🎉 Pedido confirmado com sucesso!' : 'Pedido voltou para pendente.');
+        showToast(newStatus === 'pago' ? '🎉 Pagamento 100% verificado e liberado!' : 'Pedido voltou para pendente.');
         loadStats();
         loadOrders();
       }
@@ -225,7 +273,7 @@
     }
   };
 
-  // ─── Exportar Backup em Excel / CSV ─────────────────────────
+  // Exportar Backup
   function exportCSV() {
     if (!allOrders.length) {
       showToast('Nenhum pedido para exportar.', 'error');
@@ -254,7 +302,7 @@
     showToast('Lista atualizada!', 'info');
   });
 
-  // ─── Modal Configurações ────────────────────────────────────
+  // Modal Configurações
   $('#btnSettings').addEventListener('click', () => {
     $('#settingsModal').style.display = 'flex';
   });
