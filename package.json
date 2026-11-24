@@ -1,0 +1,15 @@
+{
+  "name": "bingo-da-familia",
+  "version": "1.0.0",
+  "description": "Plataforma profissional de venda de cartelas — Bingo da Família",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "express-session": "^1.18.0",
+    "bcryptjs": "^2.4.3"
+  }
+}

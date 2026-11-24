@@ -1,0 +1,50 @@
+{
+  "orders": [
+    {
+      "id": 1,
+      "customerName": "raenio rodrigues vilarinho",
+      "whatsapp": "66984442545",
+      "quantity": 1,
+      "totalValue": 2,
+      "status": "pendente",
+      "createdAt": "2026-11-24T18:40:36.555Z"
+    },
+    {
+      "id": 2,
+      "customerName": "raenio rodrigues",
+      "whatsapp": "66984442545",
+      "quantity": 1,
+      "totalValue": 2,
+      "status": "pendente",
+      "createdAt": "2026-11-24T18:43:31.463Z"
+    },
+    {
+      "id": 3,
+      "customerName": "raenio bobo",
+      "whatsapp": "66984442545",
+      "quantity": 1,
+      "totalValue": 2,
+      "status": "pendente",
+      "createdAt": "2026-11-24T18:44:48.446Z"
+    },
+    {
+      "id": 4,
+      "customerName": "raenio bobo",
+      "whatsapp": "66984442545",
+      "quantity": 1,
+      "totalValue": 2,
+      "status": "pendente",
+      "createdAt": "2026-11-24T18:45:10.362Z"
+    }
+  ],
+  "admin": {
+    "username": "admin",
+    "password": "$2a$10$Qy6ikx1rf5Z1oPANn8AYe.wGK9bxV1HvfaDFO8Aer0JpJx7q2/YPe"
+  },
+  "settings": {
+    "pixKey": "66992730310",
+    "pixKeyType": "Celular",
+    "pixName": "Bingo da Família"
+  },
+  "nextOrderId": 5
+}

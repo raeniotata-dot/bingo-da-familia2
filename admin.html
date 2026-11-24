@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Bingo da Família</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/admin.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <!-- ═══ LOGIN ═══ -->
+  <div class="admin-login" id="loginSection">
+    <div class="login-card">
+      <div class="login-logo">
+        <i class="fas fa-star"></i>
+      </div>
+      <h1>Bingo da Família</h1>
+      <h2>Painel Administrativo</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input type="text" id="loginUser" placeholder="Usuário" required autocomplete="username" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="loginPass" placeholder="Senha" required autocomplete="current-password" />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+          <i class="fas fa-sign-in-alt"></i> Entrar
+        </button>
+        <p class="login-error" id="loginError"></p>
+      </form>
+      <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao site</a>
+    </div>
+  </div>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div class="admin-dashboard" id="dashboardSection" style="display:none">
+
+    <!-- Top bar -->
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <div class="admin-brand">
+          <i class="fas fa-star"></i>
+          <span>Bingo da Família</span>
+          <span class="admin-tag">Admin</span>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-sm btn-outline" id="btnSettings" title="Configurações">
+            <i class="fas fa-cog"></i> <span class="hide-mobile">Configurações</span>
+          </button>
+          <button class="btn btn-sm btn-outline" id="btnLogout" title="Sair">
+            <i class="fas fa-sign-out-alt"></i> <span class="hide-mobile">Sair</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card stat-green">
+          <div class="stat-icon"><i class="fas fa-brazilian-real-sign"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="statRevenue">R$ 0,00</span>
+            <span class="stat-label">Total Arrecadado (Pagos)</span>
+          </div>
+        </div>
+        <div class="stat-card stat-gold">
+          <div class="stat-icon"><i class="fas fa-ticket"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="statCards">0</span>
+            <span class="stat-label">Cartelas Vendidas (Pagas)</span>
+          </div>
+        </div>
+        <div class="stat-card stat-blue">
+          <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="statOrders">0</span>
+            <span class="stat-label">Total de Pedidos</span>
+          </div>
+        </div>
+        <div class="stat-card stat-orange">
+          <div class="stat-icon"><i class="fas fa-clock"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="statPending">0</span>
+            <span class="stat-label">Pedidos Pendentes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders table -->
+      <div class="orders-panel">
+        <div class="panel-header">
+          <h2><i class="fas fa-list"></i> Pedidos</h2>
+          <div class="panel-controls">
+            <select id="filterStatus" class="select-filter">
+              <option value="all">Todos</option>
+              <option value="pendente">Pendentes</option>
+              <option value="pago">Pagos</option>
+            </select>
+            <button class="btn btn-sm btn-outline" id="btnRefresh">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>WhatsApp</th>
+                <th>Cartelas</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody">
+              <tr class="empty-row">
+                <td colspan="8">Nenhum pedido encontrado</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ═══ SETTINGS MODAL ═══ -->
+  <div class="modal-overlay" id="settingsModal" style="display:none">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fas fa-cog"></i> Configurações</h3>
+        <button class="modal-close" id="closeSettings">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <h4>Chave PIX</h4>
+          <div class="form-group">
+            <label for="settPixKeyType">Tipo da Chave</label>
+            <select id="settPixKeyType" class="form-select">
+              <option value="CPF">CPF</option>
+              <option value="CNPJ">CNPJ</option>
+              <option value="E-mail">E-mail</option>
+              <option value="Celular">Celular</option>
+              <option value="Aleatória">Chave Aleatória</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="settPixKey">Chave PIX</label>
+            <input type="text" id="settPixKey" placeholder="Digite sua chave PIX" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label for="settPixName">Nome do Beneficiário</label>
+            <input type="text" id="settPixName" placeholder="Nome exibido no pagamento" class="form-input" />
+          </div>
+          <button class="btn btn-primary btn-block" id="btnSaveSettings">
+            <i class="fas fa-save"></i> Salvar Configurações PIX
+          </button>
+        </div>
+
+        <hr class="settings-divider" />
+
+        <div class="settings-section">
+          <h4>Alterar Senha</h4>
+          <div class="form-group">
+            <label for="settCurrentPass">Senha Atual</label>
+            <input type="password" id="settCurrentPass" placeholder="Senha atual" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label for="settNewPass">Nova Senha</label>
+            <input type="password" id="settNewPass" placeholder="Nova senha (mín. 6 caracteres)" class="form-input" />
+          </div>
+          <button class="btn btn-primary btn-block" id="btnChangePass">
+            <i class="fas fa-key"></i> Alterar Senha
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TOAST ═══ -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/admin.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
