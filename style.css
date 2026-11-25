@@ -1,118 +1,142 @@
 /* ══════════════════════════════════════════════════════════════
-   Bingo da Família — Tema 100% Natalino 🎄🎅
+   Bingo da Família — Tema Super Natalino com Papai Noel 🎅🎄
    ══════════════════════════════════════════════════════════════ */
 
 :root {
   --gold:         #D4AF37;
-  --gold-light:   #F3E5AB;
-  --gold-dark:    #AA8012;
-  --xmas-red:     #C41E3A;
-  --xmas-red-dark:#8B0000;
-  --green-dark:   #165B33;
-  --green-deep:   #0C381E;
-  --green-mid:    #187A44;
-  --green-light:  #2E8B57;
+  --gold-light:   #FDE68A;
+  --gold-dark:    #B45309;
+  --xmas-red:     #DC2626;
+  --xmas-red-dark:#991B1B;
+  --green-dark:   #064E3B;
+  --green-deep:   #022C22;
+  --green-mid:    #047857;
+  --green-light:  #10B981;
   --white:        #FFFFFF;
-  --off-white:    #FBFBFA;
-  --gray-100:     #F3F4F6;
-  --gray-200:     #E5E7EB;
-  --gray-300:     #D1D5DB;
-  --gray-500:     #6B7280;
-  --gray-700:     #374151;
-  --dark:         #111827;
-  --radius:       16px;
-  --radius-sm:    10px;
-  --shadow:       0 4px 24px rgba(0,0,0,0.08);
-  --shadow-lg:    0 12px 48px rgba(0,0,0,0.18);
+  --off-white:    #FEF3C7;
+  --dark:         #0F172A;
+  --radius:       20px;
+  --radius-sm:    12px;
+  --shadow:       0 8px 30px rgba(0,0,0,0.12);
+  --shadow-lg:    0 16px 50px rgba(0,0,0,0.3);
   --transition:   0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:    'Inter', sans-serif;
   --font-display: 'Playfair Display', Georgia, serif;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+
 body {
   font-family: var(--font-body);
   color: var(--dark);
-  background: #0d2b18;
+  /* Fundo Mágico Natalino com Gradiente e Pinheiros Sutis */
+  background: radial-gradient(circle at 50% 20%, #1e5a32 0%, #0a331a 50%, #031c0e 100%);
+  background-attachment: fixed;
   line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
 }
-a { text-decoration: none; color: inherit; }
-button { cursor: pointer; border: none; background: none; font-family: inherit; }
-img { max-width: 100%; height: auto; }
 
-/* ─── EFEITO DE NEVE NATALINA ────────────────────────────────── */
+/* ─── PAPAI NOEL NO FUNDO (CANTO E TRENÓ FLUTUANDO) ──────────── */
+.santa-background-decor {
+  position: fixed;
+  bottom: 10px;
+  right: 15px;
+  font-size: 5rem;
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 1;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
+  animation: floatSanta 6s ease-in-out infinite;
+}
+
+.sleigh-sky {
+  position: fixed;
+  top: 85px;
+  left: -200px;
+  font-size: 2.5rem;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 2;
+  animation: flySleigh 28s linear infinite;
+}
+
+@keyframes floatSanta {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(4deg); }
+}
+
+@keyframes flySleigh {
+  0% { transform: translateX(0); left: -100px; }
+  100% { transform: translateX(120vw); left: 100%; }
+}
+
+/* ─── FLUXO DE NEVE INTENSO E DELICADO ────────────────────────── */
 .snowflakes {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
   pointer-events: none;
   z-index: 999;
-  overflow: hidden;
 }
 .snowflake {
   position: absolute;
-  top: -10%;
+  top: -5%;
   color: #fff;
-  font-size: 1.2rem;
-  opacity: 0.8;
+  opacity: 0.9;
   user-select: none;
-  animation: fall 10s linear infinite;
+  animation: fallSnow linear infinite;
+  text-shadow: 0 0 8px rgba(255,255,255,0.8);
 }
-.snowflake:nth-child(1) { left: 5%; animation-duration: 8s; animation-delay: 0s; font-size: 1rem; }
-.snowflake:nth-child(2) { left: 15%; animation-duration: 12s; animation-delay: 2s; font-size: 1.4rem; }
-.snowflake:nth-child(3) { left: 25%; animation-duration: 9s; animation-delay: 4s; font-size: 1.1rem; }
-.snowflake:nth-child(4) { left: 40%; animation-duration: 11s; animation-delay: 1s; font-size: 1.5rem; }
-.snowflake:nth-child(5) { left: 55%; animation-duration: 7s; animation-delay: 3s; font-size: 0.9rem; }
-.snowflake:nth-child(6) { left: 65%; animation-duration: 13s; animation-delay: 5s; font-size: 1.3rem; }
-.snowflake:nth-child(7) { left: 75%; animation-duration: 10s; animation-delay: 2.5s; font-size: 1.2rem; }
-.snowflake:nth-child(8) { left: 85%; animation-duration: 8.5s; animation-delay: 0.5s; font-size: 1rem; }
-.snowflake:nth-child(9) { left: 92%; animation-duration: 11.5s; animation-delay: 3.5s; font-size: 1.6rem; }
-.snowflake:nth-child(10){ left: 50%; animation-duration: 9.5s; animation-delay: 6s; font-size: 1.2rem; }
+.snowflake:nth-child(1) { left: 4%; font-size: 1.2rem; animation-duration: 9s; animation-delay: 0s; }
+.snowflake:nth-child(2) { left: 14%; font-size: 1.8rem; animation-duration: 12s; animation-delay: 2s; }
+.snowflake:nth-child(3) { left: 24%; font-size: 1rem; animation-duration: 8s; animation-delay: 4s; }
+.snowflake:nth-child(4) { left: 36%; font-size: 1.6rem; animation-duration: 11s; animation-delay: 1s; }
+.snowflake:nth-child(5) { left: 52%; font-size: 2rem; animation-duration: 13s; animation-delay: 3s; }
+.snowflake:nth-child(6) { left: 66%; font-size: 1.3rem; animation-duration: 10s; animation-delay: 5s; }
+.snowflake:nth-child(7) { left: 78%; font-size: 1.7rem; animation-duration: 9.5s; animation-delay: 2.5s; }
+.snowflake:nth-child(8) { left: 88%; font-size: 1.1rem; animation-duration: 8.5s; animation-delay: 0.5s; }
+.snowflake:nth-child(9) { left: 95%; font-size: 1.5rem; animation-duration: 11.5s; animation-delay: 3.5s; }
+.snowflake:nth-child(10){ left: 46%; font-size: 1.4rem; animation-duration: 10s; animation-delay: 6s; }
 
-@keyframes fall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+@keyframes fallSnow {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
   100% { transform: translateY(105vh) rotate(360deg); opacity: 0.2; }
 }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-.gold-text { color: var(--gold-light); text-shadow: 0 0 15px rgba(212,175,55,0.4); }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 3; }
+.gold-text { color: var(--gold-light); text-shadow: 0 0 20px rgba(253, 230, 138, 0.6); }
 .white { color: var(--white) !important; }
 
-/* ─── Botões Natalinos ────────────────────────────────────────── */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 15px 34px;
-  border-radius: 50px;
-  font-weight: 700; font-size: 1rem;
-  transition: all var(--transition);
-  position: relative;
+/* ─── LUZES DE NATAL NO CABEÇALHO ────────────────────────────── */
+.christmas-lights {
+  position: absolute;
+  top: 70px; left: 0; width: 100%;
+  display: flex; justify-content: space-around;
+  pointer-events: none;
+  z-index: 101;
 }
-.btn-primary {
-  background: linear-gradient(135deg, var(--xmas-red), var(--xmas-red-dark));
-  color: var(--white);
-  border: 2px solid var(--gold);
-  box-shadow: 0 4px 18px rgba(196,30,58,0.45);
+.light {
+  width: 10px; height: 16px; border-radius: 50%;
+  animation: glow 1.2s infinite alternate;
 }
-.btn-primary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(196,30,58,0.6);
-  background: linear-gradient(135deg, #e62243, var(--xmas-red));
-}
-.btn-outline {
-  border: 2px solid var(--xmas-red);
-  color: var(--xmas-red);
-  background: var(--white);
-}
-.btn-outline:hover { background: var(--xmas-red); color: var(--white); }
-.btn-lg { padding: 18px 44px; font-size: 1.15rem; }
-.btn-block { width: 100%; }
+.light:nth-child(odd) { background: #ff0033; box-shadow: 0 0 10px #ff0033; animation-delay: 0.2s; }
+.light:nth-child(even) { background: #ffd700; box-shadow: 0 0 10px #ffd700; animation-delay: 0.6s; }
+.light:nth-child(3n) { background: #00ff66; box-shadow: 0 0 10px #00ff66; animation-delay: 0.9s; }
+.light:nth-child(4n) { background: #00e1ff; box-shadow: 0 0 10px #00e1ff; animation-delay: 0.4s; }
 
-/* ─── Header Natalino ─────────────────────────────────────────── */
+@keyframes glow {
+  from { opacity: 0.4; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1.15); }
+}
+
+/* ─── CABEÇALHO NATALINO ─────────────────────────────────────── */
 .header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(14, 46, 26, 0.96);
-  border-bottom: 2px solid rgba(212,175,55,0.3);
-  backdrop-filter: blur(10px);
+  background: rgba(10, 51, 26, 0.95);
+  border-bottom: 3px solid var(--gold);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 .header-inner {
   display: flex; align-items: center; justify-content: space-between;
@@ -121,213 +145,274 @@ img { max-width: 100%; height: auto; }
 .logo {
   display: flex; align-items: center; gap: 10px;
   font-family: var(--font-display);
-  font-size: 1.3rem; font-weight: 800;
+  font-size: 1.35rem; font-weight: 800;
   color: var(--white);
+  text-decoration: none;
 }
-.logo-icon { color: var(--xmas-red); font-size: 1.4rem; }
+.logo-icon { color: #f87171; font-size: 1.6rem; }
 .badge-xmas {
   font-size: 0.75rem;
-  background: var(--xmas-red);
+  background: linear-gradient(135deg, #ef4444, #991b1b);
   color: #fff;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
-  margin-left: 6px;
-  border: 1px solid var(--gold);
+  margin-left: 8px;
+  border: 1.5px solid var(--gold);
+  font-weight: 800;
 }
 .nav { display: flex; gap: 28px; }
 .nav a {
-  color: rgba(255,255,255,0.85); font-weight: 600; font-size: 0.95rem;
+  color: rgba(255,255,255,0.9); font-weight: 700; font-size: 0.95rem;
   transition: color var(--transition);
+  text-decoration: none;
 }
 .nav a:hover { color: var(--gold-light); }
 .mobile-toggle { display: none; color: var(--white); font-size: 1.4rem; }
 
-/* ─── Hero Natalino ───────────────────────────────────────────── */
+/* ─── BOTÕES NATALINOS DE ALTO DESTAQUE ──────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-weight: 800; font-size: 1.05rem;
+  transition: all var(--transition);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #ef4444, #991b1b);
+  color: var(--white);
+  border: 2px solid var(--gold);
+  box-shadow: 0 6px 20px rgba(220,38,38,0.5);
+}
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(220,38,38,0.7);
+  background: linear-gradient(135deg, #f87171, #dc2626);
+}
+.btn-outline {
+  border: 2px solid #dc2626;
+  color: #dc2626;
+  background: #ffffff;
+}
+.btn-outline:hover { background: #dc2626; color: #ffffff; }
+.btn-lg { padding: 18px 46px; font-size: 1.2rem; }
+.btn-block { width: 100%; }
+
+/* ─── HERO NATALINO COM PAPAI NOEL ───────────────────────────── */
 .hero {
   position: relative; overflow: hidden;
-  min-height: 90vh;
+  min-height: 92vh;
   display: flex; align-items: center;
-  background: radial-gradient(circle at center, #1b5e34 0%, #0c2b18 100%);
-  padding: 120px 0 80px;
-  border-bottom: 4px solid var(--gold);
+  padding: 140px 0 90px;
+  text-align: center;
 }
-.hero-content { position: relative; text-align: center; max-width: 760px; margin: 0 auto; z-index: 2; }
+.hero-content {
+  max-width: 800px; margin: 0 auto;
+}
+.santa-hero-icon {
+  font-size: 5.5rem;
+  margin-bottom: 12px;
+  display: inline-block;
+  animation: bounceSanta 2.5s infinite;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+}
+
+@keyframes bounceSanta {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-14px) scale(1.06); }
+}
+
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(196,30,58,0.25);
-  border: 1px solid var(--xmas-red);
-  padding: 8px 24px; border-radius: 50px;
-  color: #ffccd5; font-size: 0.9rem; font-weight: 700;
-  margin-bottom: 24px;
+  background: rgba(220,38,38,0.3);
+  border: 1.5px solid var(--gold);
+  padding: 8px 26px; border-radius: 50px;
+  color: #fef08a; font-size: 0.95rem; font-weight: 800;
+  margin-bottom: 20px;
+  backdrop-filter: blur(5px);
 }
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  font-size: clamp(2.8rem, 6.5vw, 5rem);
   font-weight: 900; color: var(--white);
-  line-height: 1.15; margin-bottom: 16px;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  line-height: 1.15; margin-bottom: 18px;
+  text-shadow: 0 4px 25px rgba(0,0,0,0.6);
 }
 .hero-subtitle {
-  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-  color: var(--gold-light); font-weight: 700;
-  margin-bottom: 16px;
+  font-size: clamp(1.25rem, 3vw, 1.7rem);
+  color: var(--gold-light); font-weight: 800;
+  margin-bottom: 18px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.4);
 }
 .hero-desc {
-  font-size: 1.1rem; color: rgba(255,255,255,0.85);
-  max-width: 580px; margin: 0 auto 32px;
+  font-size: 1.15rem; color: rgba(255,255,255,0.9);
+  max-width: 620px; margin: 0 auto 34px;
 }
 .hero-price {
-  background: rgba(12, 43, 24, 0.7);
-  border: 2px dashed var(--gold);
+  background: rgba(6, 78, 59, 0.85);
+  border: 3px dashed var(--gold);
   border-radius: var(--radius);
   display: inline-flex; flex-direction: column; align-items: center;
-  padding: 12px 36px;
-  margin-bottom: 34px;
+  padding: 14px 44px;
+  margin-bottom: 36px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
-.price-label { color: rgba(255,255,255,0.8); font-size: 0.95rem; }
+.price-label { color: rgba(255,255,255,0.9); font-size: 1rem; font-weight: 600; }
 .price-value {
-  font-size: 2.8rem; font-weight: 900; color: #ffeb3b;
-  text-shadow: 0 2px 10px rgba(255,235,59,0.5);
+  font-size: 3.2rem; font-weight: 900; color: #fde047;
+  text-shadow: 0 2px 15px rgba(253,224,71,0.6);
+  line-height: 1.1;
 }
 
-/* ─── Seções e Cards ─────────────────────────────────────────── */
-.section { padding: 80px 0; }
-.section-light { background: #fdfaf6; }
-.section-green { background: linear-gradient(180deg, #0e351e, #071f11); }
+/* ─── SEÇÕES ─────────────────────────────────────────────────── */
+.section { padding: 90px 0; }
+.section-light {
+  background: #fffdfa;
+  border-top: 4px solid var(--gold);
+  border-bottom: 4px solid var(--gold);
+  position: relative;
+}
+.section-green {
+  background: transparent;
+}
 .section-title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 800; text-align: center;
-  color: var(--green-dark); margin-bottom: 8px;
+  font-size: clamp(2.2rem, 4.5vw, 3rem);
+  font-weight: 900; text-align: center;
+  color: #064e3b; margin-bottom: 10px;
 }
 .section-subtitle {
-  text-align: center; font-size: 1.1rem;
-  color: var(--gray-500); margin-bottom: 48px;
+  text-align: center; font-size: 1.15rem;
+  color: #4b5563; margin-bottom: 50px; font-weight: 500;
 }
 
+/* ─── CARDS DE COMO FUNCIONA ─────────────────────────────────── */
 .steps-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
 }
 .step-card {
-  background: var(--white);
+  background: #ffffff;
   border-radius: var(--radius);
-  padding: 38px 28px;
+  padding: 42px 28px;
   text-align: center;
   position: relative;
-  border: 2px solid #e8decb;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  border: 2px solid #fed7aa;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
   transition: all var(--transition);
 }
 .step-card:hover {
   transform: translateY(-8px);
-  border-color: var(--xmas-red);
+  border-color: #ef4444;
   box-shadow: var(--shadow-lg);
 }
 .step-number {
-  position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--xmas-red);
+  position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, #ef4444, #991b1b);
   border: 2px solid var(--gold);
-  color: var(--white); font-weight: 800; font-size: 1rem;
+  color: var(--white); font-weight: 900; font-size: 1.1rem;
   display: flex; align-items: center; justify-content: center;
 }
 .step-icon {
-  width: 70px; height: 70px; border-radius: 50%;
-  background: #f7ede2;
-  color: var(--xmas-red); font-size: 1.8rem;
+  width: 76px; height: 76px; border-radius: 50%;
+  background: #fef2f2;
+  color: #dc2626; font-size: 2.2rem;
   display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 20px;
-  border: 2px dashed var(--gold);
+  margin: 0 auto 22px;
+  border: 2px dashed #f87171;
 }
-.step-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; color: var(--green-dark); }
-.step-card p { font-size: 0.95rem; color: var(--gray-700); }
+.step-card h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; color: #064e3b; }
+.step-card p { font-size: 1rem; color: #4b5563; line-height: 1.6; }
 
-/* ─── Card de Compra ─────────────────────────────────────────── */
+/* ─── CAIXA PRINCIPAL DE COMPRA ──────────────────────────────── */
 .purchase-card {
-  background: var(--white);
+  background: #ffffff;
   border-radius: var(--radius);
-  padding: 40px;
-  max-width: 560px;
+  padding: 44px;
+  max-width: 580px;
   margin: 0 auto;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
-  border: 3px solid var(--gold);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  border: 4px solid var(--gold);
+  position: relative;
+  z-index: 5;
 }
 .card-title {
-  font-size: 1.4rem; font-weight: 800; margin-bottom: 28px;
-  display: flex; align-items: center; gap: 10px;
-  color: var(--green-dark);
-  border-bottom: 2px solid #f0e6d6;
-  padding-bottom: 12px;
+  font-size: 1.5rem; font-weight: 900; margin-bottom: 30px;
+  display: flex; align-items: center; gap: 12px;
+  color: #064e3b;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 14px;
 }
 .step-panel { display: none; }
 .step-panel.active { display: block; animation: fadeIn 0.4s ease; }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ─── Seletor de Quantidade ─────────────────────────────────── */
+/* ─── SELETOR DE QUANTIDADE ─────────────────────────────────── */
 .quantity-selector {
   display: flex; align-items: center; justify-content: center;
-  gap: 24px; margin-bottom: 24px;
+  gap: 26px; margin-bottom: 26px;
 }
 .qty-btn {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--xmas-red);
+  width: 58px; height: 58px; border-radius: 50%;
+  background: linear-gradient(135deg, #ef4444, #991b1b);
   border: 2px solid var(--gold);
-  color: var(--white); font-size: 1.3rem;
+  color: var(--white); font-size: 1.4rem;
   display: flex; align-items: center; justify-content: center;
   transition: all var(--transition);
-  box-shadow: 0 4px 12px rgba(196,30,58,0.3);
+  box-shadow: 0 6px 15px rgba(220,38,38,0.35);
 }
-.qty-btn:hover { background: var(--xmas-red-dark); transform: scale(1.1); }
+.qty-btn:hover { transform: scale(1.1); background: #dc2626; }
 .qty-number {
-  font-size: 3.5rem; font-weight: 900; color: var(--green-dark);
+  font-size: 3.8rem; font-weight: 900; color: #064e3b;
   line-height: 1;
 }
-.qty-label { font-size: 0.9rem; color: var(--gray-500); font-weight: 600; }
+.qty-label { font-size: 0.95rem; color: #6b7280; font-weight: 700; }
 
 .quick-select {
   display: flex; justify-content: center; gap: 10px;
-  margin-bottom: 24px; flex-wrap: wrap;
+  margin-bottom: 26px; flex-wrap: wrap;
 }
 .quick-btn {
-  padding: 10px 20px; border-radius: 50px;
-  background: #fdf3f4;
-  border: 1.5px solid #f2c2c9;
-  font-weight: 700; font-size: 0.95rem;
-  color: var(--xmas-red);
+  padding: 10px 22px; border-radius: 50px;
+  background: #fef2f2;
+  border: 2px solid #fca5a5;
+  font-weight: 800; font-size: 0.95rem;
+  color: #dc2626;
   transition: all var(--transition);
 }
 .quick-btn:hover {
-  background: var(--xmas-red); color: var(--white);
-  border-color: var(--xmas-red);
+  background: #dc2626; color: var(--white);
+  border-color: #dc2626;
 }
 
 .price-summary {
-  background: #fbf8f3;
+  background: #fefce8;
   border-radius: var(--radius-sm);
-  padding: 22px;
-  margin-bottom: 26px;
-  border: 1px solid #ebdcc5;
+  padding: 24px;
+  margin-bottom: 28px;
+  border: 2px dashed #fde047;
 }
 .price-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 6px 0; font-size: 1rem; color: var(--gray-700);
+  padding: 6px 0; font-size: 1.05rem; color: #374151; font-weight: 600;
 }
 .price-row.total {
-  font-size: 1.35rem; font-weight: 900; color: var(--xmas-red);
+  font-size: 1.45rem; font-weight: 900; color: #dc2626;
 }
-.price-divider { height: 1px; background: #e3d2b8; margin: 12px 0; }
+.price-divider { height: 1.5px; background: #fef08a; margin: 12px 0; }
 
-/* ─── Formulários ───────────────────────────────────────────── */
-.form-group { margin-bottom: 20px; }
+/* ─── FORMULÁRIOS ───────────────────────────────────────────── */
+.form-group { margin-bottom: 22px; }
 .form-group label {
-  display: block; font-weight: 700; font-size: 0.95rem;
-  margin-bottom: 8px; color: var(--gray-700);
+  display: block; font-weight: 800; font-size: 0.95rem;
+  margin-bottom: 8px; color: #374151;
 }
 .input-wrapper {
   position: relative;
@@ -335,129 +420,125 @@ img { max-width: 100%; height: auto; }
 }
 .input-wrapper i {
   position: absolute; left: 16px;
-  color: var(--xmas-red); font-size: 1.1rem;
+  color: #dc2626; font-size: 1.2rem;
 }
 .input-wrapper input {
-  width: 100%; padding: 15px 15px 15px 48px;
-  border: 2px solid var(--gray-300);
+  width: 100%; padding: 16px 16px 16px 50px;
+  border: 2px solid #d1d5db;
   border-radius: var(--radius-sm);
   font-size: 1.05rem; font-family: inherit;
   transition: all var(--transition);
 }
 .input-wrapper input:focus {
   outline: none;
-  border-color: var(--xmas-red);
-  box-shadow: 0 0 0 4px rgba(196,30,58,0.15);
+  border-color: #dc2626;
+  box-shadow: 0 0 0 4px rgba(220,38,38,0.15);
 }
-.form-error { color: var(--xmas-red); font-size: 0.85rem; font-weight: 600; margin-top: 4px; }
+.form-error { color: #dc2626; font-size: 0.85rem; font-weight: 700; margin-top: 5px; }
 
 .order-review {
-  background: #f7f9f7; border-radius: var(--radius-sm);
-  padding: 20px; margin-bottom: 24px; border: 1px solid #dce8dd;
+  background: #f0fdf4; border-radius: var(--radius-sm);
+  padding: 22px; margin-bottom: 26px; border: 1.5px solid #bbf7d0;
 }
-.order-review h4 { font-size: 1rem; font-weight: 800; color: var(--green-dark); margin-bottom: 10px; }
-.review-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 1rem; }
-.review-row.total { font-weight: 900; font-size: 1.25rem; color: var(--xmas-red); margin-top: 8px; border-top: 1px solid #c9dccb; padding-top: 8px; }
+.order-review h4 { font-size: 1.05rem; font-weight: 900; color: #064e3b; margin-bottom: 12px; }
+.review-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 1.05rem; }
+.review-row.total { font-weight: 900; font-size: 1.35rem; color: #dc2626; margin-top: 8px; border-top: 1.5px solid #86efac; padding-top: 8px; }
 .form-actions { display: flex; gap: 12px; }
 .form-actions .btn { flex: 1; }
 
-/* ─── Etapa de Pagamento (Foco Total no PIX) ──────────────────── */
+/* ─── ÁREA DE PAGAMENTO PIX ─────────────────────────────────── */
 .payment-amount {
-  text-align: center; margin-bottom: 24px;
-  padding: 24px; border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--green-dark), #093319);
-  border: 2px solid var(--gold);
+  text-align: center; margin-bottom: 26px;
+  padding: 26px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #064e3b, #022c22);
+  border: 3px solid var(--gold);
 }
-.payment-label { display: block; color: rgba(255,255,255,0.9); font-size: 1rem; margin-bottom: 4px; }
-.payment-value { font-size: 2.8rem; font-weight: 900; color: #ffeb3b; }
+.payment-label { display: block; color: rgba(255,255,255,0.9); font-size: 1.05rem; margin-bottom: 4px; font-weight: 600; }
+.payment-value { font-size: 3rem; font-weight: 900; color: #fde047; text-shadow: 0 0 15px rgba(253,224,71,0.5); }
 
 .pix-key-box {
-  background: #fff8e7; border-radius: var(--radius-sm);
-  padding: 24px; margin-bottom: 24px; text-align: center;
-  border: 2px solid var(--gold);
+  background: #fffbeb; border-radius: var(--radius-sm);
+  padding: 26px; margin-bottom: 26px; text-align: center;
+  border: 3px solid var(--gold);
 }
-.pix-type { font-size: 0.95rem; color: #856404; margin-bottom: 12px; font-weight: 800; }
+.pix-type { font-size: 1rem; color: #92400e; margin-bottom: 12px; font-weight: 800; }
 .pix-key-row {
   display: flex; flex-direction: column; align-items: center;
-  gap: 12px; margin-bottom: 10px;
+  gap: 14px; margin-bottom: 12px;
 }
 .pix-key {
-  font-size: 1.5rem; font-weight: 900; color: var(--green-deep);
-  background: #ffffff; padding: 12px 24px; border-radius: 12px;
-  border: 2px dashed #caa232; width: 100%; word-break: break-all;
-  letter-spacing: 1px;
+  font-size: 1.6rem; font-weight: 900; color: #064e3b;
+  background: #ffffff; padding: 14px 26px; border-radius: 14px;
+  border: 2px dashed #d97706; width: 100%; word-break: break-all;
+  letter-spacing: 1.5px;
 }
 .btn-copy {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   padding: 16px 36px; border-radius: 50px;
-  background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+  background: linear-gradient(135deg, #059669, #047857);
   color: var(--white);
-  font-weight: 800; font-size: 1.15rem;
-  box-shadow: 0 4px 15px rgba(24,122,68,0.4);
+  font-weight: 900; font-size: 1.2rem;
+  box-shadow: 0 6px 20px rgba(5,150,105,0.4);
   width: 100%; transition: all var(--transition);
+  border: 2px solid var(--gold);
 }
 .btn-copy:hover {
-  background: linear-gradient(135deg, var(--green-light), var(--green-mid));
+  background: linear-gradient(135deg, #10b981, #059669);
   transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(24,122,68,0.5);
+  box-shadow: 0 10px 25px rgba(5,150,105,0.5);
 }
-.pix-name { font-size: 0.9rem; color: var(--gray-700); font-weight: 600; margin-top: 8px; }
+.pix-name { font-size: 0.95rem; color: #4b5563; font-weight: 700; margin-top: 8px; }
 
 .payment-instructions {
-  background: #f9fbf9; border-radius: var(--radius-sm);
-  padding: 22px; margin-bottom: 24px; border: 1px solid #e1eee2;
+  background: #f9fafb; border-radius: var(--radius-sm);
+  padding: 24px; margin-bottom: 26px; border: 1.5px solid #e5e7eb;
 }
 .payment-instructions h4 {
-  font-size: 1.05rem; font-weight: 800; margin-bottom: 14px;
-  color: var(--green-dark); display: flex; align-items: center; gap: 8px;
+  font-size: 1.1rem; font-weight: 900; margin-bottom: 14px;
+  color: #064e3b; display: flex; align-items: center; gap: 8px;
 }
 .payment-instructions ol {
   list-style: decimal; padding-left: 20px;
   display: flex; flex-direction: column; gap: 10px;
 }
-.payment-instructions li { font-size: 0.95rem; color: var(--gray-700); }
+.payment-instructions li { font-size: 1rem; color: #4b5563; font-weight: 500; }
 
-.payment-notice {
-  display: flex; align-items: center; gap: 14px;
-  padding: 18px 22px; border-radius: var(--radius-sm);
-  background: #edf7ed; color: #1e4620; margin-bottom: 24px;
-  border-left: 5px solid var(--green-mid);
-}
-.payment-notice i { font-size: 1.4rem; color: var(--green-mid); }
-.payment-notice p { font-size: 0.95rem; font-weight: 600; }
-
-/* ─── Footer e Toasts ────────────────────────────────────────── */
+/* ─── RODAPÉ ─────────────────────────────────────────────────── */
 .footer {
-  background: #06190d;
-  padding: 32px 0;
+  background: #021a0e;
+  padding: 38px 0;
   text-align: center;
-  border-top: 3px solid var(--gold);
+  border-top: 4px solid var(--gold);
+  position: relative;
+  z-index: 5;
 }
-.footer-brand { color: var(--gold-light); font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
-.footer-copy { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+.footer-brand { color: var(--gold-light); font-size: 1.35rem; font-weight: 900; margin-bottom: 8px; }
+.footer-copy { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
 
+/* ─── TOAST ──────────────────────────────────────────────────── */
 .toast-container {
   position: fixed; bottom: 24px; right: 24px; z-index: 9999;
   display: flex; flex-direction: column-reverse; gap: 10px;
 }
 .toast {
   display: flex; align-items: center; gap: 12px;
-  padding: 16px 26px; border-radius: var(--radius-sm);
-  font-size: 1rem; font-weight: 700;
+  padding: 16px 28px; border-radius: var(--radius-sm);
+  font-size: 1rem; font-weight: 800;
   box-shadow: var(--shadow-lg);
   transform: translateX(120%);
   transition: transform 0.3s ease;
-  background: var(--green-dark); color: #fff;
+  background: #064e3b; color: #fff;
   border: 2px solid var(--gold);
 }
 .toast.show { transform: translateX(0); }
-.toast-error { background: var(--xmas-red); }
+.toast-error { background: #dc2626; }
 
 @media (max-width: 768px) {
   .nav { display: none; }
   .purchase-card { padding: 26px 18px; }
-  .qty-number { font-size: 2.8rem; }
-  .pix-key { font-size: 1.2rem; }
-  .btn-copy { font-size: 1rem; padding: 14px 20px; }
+  .qty-number { font-size: 3rem; }
+  .pix-key { font-size: 1.3rem; }
+  .btn-copy { font-size: 1.05rem; padding: 14px 20px; }
   .form-actions { flex-direction: column-reverse; }
+  .santa-background-decor { font-size: 3.5rem; }
 }
